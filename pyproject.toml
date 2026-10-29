@@ -1,0 +1,82 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "btsum"
+description = "Deterministic BitTorrent identity tool"
+readme = "README.md"
+license = { file = "License.txt" }
+requires-python = ">=3.8"
+keywords = ["bittorrent", "torrent", "magnet", "sha1", "sha256"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Internet",
+    "Topic :: System :: Filesystems",
+    "Topic :: Utilities",
+]
+dynamic = ["version"]
+
+[project.scripts]
+btsum = "btsum:main"
+
+[tool.hatch.version]
+path = "btsum.py"
+
+[tool.hatch.build.targets.wheel]
+only-include = ["btsum.py"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "btsum.py",
+    "README.md",
+    "SPEC.md",
+    "License.txt",
+    "gen_vectors.py",
+    "devscripts/",
+    "tests/",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+
+[tool.ruff.lint]
+select = [
+    "E4", "E7", "E9",   # pycodestyle errors
+    "F",                # pyflakes
+    "I",                # isort
+    "B",                # bugbear
+    "UP",               # pyupgrade
+    "SIM",              # simplify
+    "D",                # pydocstyle
+]
+ignore = [
+    "UP031",            # % formatting is intentional
+    "D203", "D205", "D213",   # conflicting/pedantic pydocstyle
+    "D401",             # imperative mood
+    "D415",             # first-line punctuation
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D"]
+"devscripts/*" = ["D"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.mypy]
+python_version = "3.10"
+files = ["btsum.py"]
+check_untyped_defs = true
+warn_unused_ignores = true
